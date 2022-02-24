@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #ec1f55;
+    --primary-color: #19cf50;
     --text-color: #333;
 }
 
@@ -115,23 +115,40 @@ header h2 {
 }
 
 .progress {
+    position: relative;
+    z-index: 2;
     width: 100%;
     -webkit-appearance: none;
-    height: 6px;
-    background: #d3d3d3;
+    height: 10px;
+    background: transparent;
+    border: solid 1px var(--primary-color);
     outline: none;
-    opacity: 0.7;
     -webkit-transition: 0.2s;
     transition: opacity 0.2s;
+    border-radius: 10px;
+}
+
+#progress-run {
+    width: 0%;
+    background-color: var(--primary-color);
+    height: 8px;
+    position: relative;
+    top: -15px;
+    z-index: 1;
+    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .progress::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 12px;
-    height: 6px;
+    width: 13px;
+    height: 13px;
     background-color: var(--primary-color);
+    box-shadow: 0px 0px 5px 1px gray; 
     cursor: pointer;
+    border-radius: 50%;
 }
 
 

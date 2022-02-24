@@ -51,7 +51,7 @@
             </div>
 
             <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
-            <!-- <progress id="progress" max="100" value="1"></progress> -->
+            <div id="progress-run"></div>
             <audio id="audio" src=""></audio>
         </div>
 
@@ -77,6 +77,7 @@
     const audio = $('#audio');
     const btnPlay = $('.btn.btn-toggle-play');
     const progress = $('#progress');
+    const progressRun = $('#progress-run');
     const btn_next = $('.btn-next');
     const btn_prev = $('.btn-prev');
     const btn_random = $('.btn-random');
@@ -203,8 +204,11 @@
             };
             // xử lý sự kiện thanh tiến trình
             audio.ontimeupdate = function() {
-                var progressPercent = Math.floor((audio.currentTime / audio.duration) * 100);
-                progress.value = progressPercent?progressPercent:0;
+                if(audio.duration){
+                    var progressPercent = (audio.currentTime / audio.duration) * 100;
+                    progress.value = progressPercent;
+                    progressRun.style.width = progressPercent + "%";
+                }
             };
             // xử lý sự kiện khi tua nhạc
             progress.oninput = function() {
@@ -270,15 +274,29 @@
         },
         randomSong: function() {
             var newIndex;
+            var arrayFlagSongs = app.config.arrayFlagSongs;
+            var sumValue = arrayFlagSongs.reduce(function(acc, song, index){
+                return acc + song[index];
+            },0)
+            if(sumValue === app.songs.length){
+                arrayFlagSongs.forEach(function(song, index){
+                    song[index] = 0;
+                })
+            }
             do{
                 newIndex = Math.floor(Math.random() * this.songs.length);
-            }while(newIndex == this.currentIndex);
-
+                console.log(newIndex);
+            }while(newIndex == this.currentIndex || arrayFlagSongs[newIndex][newIndex] !== 0);
+            console.log(newIndex);
             this.currentIndex = newIndex;
             this.loadCurrentSong();
+            arrayFlagSongs[newIndex][newIndex] = 1;
+            app.setConfig('arrayFlagSongs', arrayFlagSongs);
         },
         renderSongs: function() {
+            var arrayIndex = [];
             var dataSongs = this.songs.map(function(song, index) {
+                arrayIndex.push({[index]: 0});
                 return `
                     <div class="song ${index === app.currentIndex ? 'active' : ''}" data-index = ${index}>
                         <div class="thumb" style="background-image: url('${song.image}')">
@@ -293,6 +311,7 @@
                     </div>
                 `
             })
+            app.setConfig('arrayFlagSongs', arrayIndex);
             playlist.innerHTML = dataSongs.join('');
         },
         loadCurrentSong: function() {
