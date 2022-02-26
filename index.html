@@ -83,12 +83,12 @@
     const btn_random = $('.btn-random');
     const btn_repeat = $('.btn-repeat');
     var durationAudio = audio.duration;
-    var isPlaying = false;
-    var isRandom = false;
-    var isRepeat = false;
     const app = {
-        currentIndex: 0,
+        isPlaying: false,//Lỗi số 1
+        isRandom: false,
+        isRepeat: false,
         config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
+        currentIndex: 0,//Lỗi số 2
         songs: [{
                 name: 'Nối vòng tay lớn',
                 author: 'VA',
@@ -183,8 +183,8 @@
                     }
             })})
             // xử lý sự kiện ấn btn play
-            btnPlay.onclick = function() {
-                if(isPlaying){
+            btnPlay.onclick = ()=> {
+                if(app.isPlaying){
                     audio.pause();
                 }else {
                     audio.play();
@@ -192,15 +192,17 @@
             };
             // bắt sự kiện bài hát đang phát
             audio.onplay = function() {
-                isPlaying = true;
+                app.isPlaying = true;
                 player.classList.add('playing');
                 cdThumbAnimate.play();
+                app.setConfig('currentIndex', app.currentIndex);
             };
             // bắt sự kiện bài hát đang pause
             audio.onpause = function() {
-                isPlaying = false;
+                app.isPlaying = false;
                 cdThumbAnimate.pause();
                 player.classList.remove('playing');
+                app.setConfig('currentIndex', app.currentIndex);
             };
             // xử lý sự kiện thanh tiến trình
             audio.ontimeupdate = function() {
@@ -217,7 +219,7 @@
             };
             // xử lý next bài hát
             btn_next.onclick = function() {
-                if(isRandom){
+                if(app.isRandom){
                     app.randomSong();
                 }else app.nextSong();
                 audio.play();
@@ -226,28 +228,30 @@
             };
             // xử lý prev bài hát
             btn_prev.onclick = function() {
-                if(isRandom){
+                if(app.isRandom){
                     app.randomSong();
-                }else app.prevSong();
+                }else {
+                    app.prevSong();
+                }
                 audio.play();
                 app.activeCurrentSong();
                 app.scrollIntoView();
             };
             // xử lý random bài hát
             btn_random.onclick = function() {
-                isRandom = !isRandom;
-                app.setConfig('isRandom', isRandom);
-                this.classList.toggle("active", isRandom);
+                app.isRandom = !app.isRandom;
+                app.setConfig('isRandom', app.isRandom);
+                this.classList.toggle("active", app.isRandom);
             };
             // xử lý repeat bài hát
             btn_repeat.onclick = function() {
-                isRepeat = !isRepeat;
-                app.setConfig('isRepeat', isRepeat);
-                this.classList.toggle("active", isRepeat);
+                app.isRepeat = !app.isRepeat;
+                app.setConfig('isRepeat', app.isRepeat);
+                this.classList.toggle("active", app.isRepeat);
             };
             // xử lý sự kiện chuyển bài khi kết thúc bài hát
             audio.onended = function() {
-                if(isRepeat) {
+                if(app.isRepeat) {
                     audio.play();
                 }else btn_next.click();
             }
@@ -312,6 +316,7 @@
                 `
             })
             app.setConfig('arrayFlagSongs', arrayIndex);
+            app.setConfig('currentIndex', app.currentIndex);
             playlist.innerHTML = dataSongs.join('');
         },
         loadCurrentSong: function() {
@@ -326,11 +331,13 @@
             })
         },
         loadConfig: function() {
-            isRandom = this.config['isRandom'];
-            isRepeat = this.config['isRepeat']; 
-
-            btn_random.classList.toggle("active", isRandom);
-            btn_repeat.classList.toggle("active", isRepeat);
+            app.isRandom = this.config['isRandom'];
+            app.isRepeat = this.config['isRepeat'];
+            if(this.config['currentIndex']) {
+                app.currentIndex = this.config['currentIndex'];
+            }else {
+                app.currentIndex = 0;
+            }
         },
         start: function() {
             // load cài đặt
@@ -343,6 +350,8 @@
             this.defineProperties();
             // Load bài hát hiện tại
             this.loadCurrentSong();
+            btn_random.classList.toggle("active", this.isRandom);
+            btn_repeat.classList.toggle("active", this.isRandom);
         }
     }
     app.start();
