@@ -59,8 +59,9 @@
                 </div>
             </div>
 
+            <!-- <input  type="range" value="0" step="1" min="0" max="100"> -->
             <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
-            <div id="progress-run"></div>
+            <!-- <div id="progress-run"></div> -->
             <audio id="audio" src=""></audio>
         </div>
 
@@ -86,7 +87,6 @@
     const audio = $('#audio');
     const btnPlay = $('.btn.btn-toggle-play');
     const progress = $('#progress');
-    const progressRun = $('#progress-run');
     const btn_next = $('.btn-next');
     const btn_prev = $('.btn-prev');
     const btn_random = $('.btn-random');
@@ -220,7 +220,6 @@
                 if(audio.duration){
                     var progressPercent = (audio.currentTime / audio.duration) * 100;
                     progress.value = progressPercent;
-                    progressRun.style.width = progressPercent + "%";
                 }
             };
             // xử lý sự kiện khi tua nhạc
@@ -364,18 +363,19 @@
         loadConfig: function() {
             app.isRandom = this.config['isRandom'];
             app.isRepeat = this.config['isRepeat'];
+            // load index lần trước
             if(this.config['currentIndex']) {
                 app.currentIndex = this.config['currentIndex'];
             }else {
                 app.currentIndex = 0;
             }
-
+            // load volume lần trước
             if(this.config['currentVolume']) {
                 audio.volume = this.config['currentVolume'];
                 valueVolume.value = audio.volume * 100;
             }else {
-                audio.volume = 0;
-                valueVolume.value = 0;
+                audio.volume = 1;
+                valueVolume.value = 100;
             }
         },
         start: function() {
