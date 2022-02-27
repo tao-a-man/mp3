@@ -11,7 +11,7 @@
 <body>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music player</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
@@ -28,6 +28,13 @@
             <div class="cd">
                 <div class="cd-thumb" style="background-image: url('')">
                 </div>
+                <div class="cd-volume">
+                    <div style="display: flex">
+                        <i class="fas fa-volume-up"></i>
+                        <i class="fas fa-volume-mute"></i>
+                    </div>
+                </div>
+                <input class="volume-value" type="range" orient="vertical" value="100" step="1" min="0" max="100">
             </div>
 
             <!-- Control -->
@@ -82,6 +89,8 @@
     const btn_prev = $('.btn-prev');
     const btn_random = $('.btn-random');
     const btn_repeat = $('.btn-repeat');
+    const btn_volume = $('.cd-volume');
+    const valueVolume = $('.volume-value');
     var durationAudio = audio.duration;
     const app = {
         isPlaying: false,//Lỗi số 1
@@ -255,6 +264,26 @@
                     audio.play();
                 }else btn_next.click();
             }
+            // xử lý sự kiện bật tắt volume 
+            btn_volume.onclick = function() {
+                this.classList.toggle('not-volume');
+
+                // set lại volume
+                if(audio.volume != 0){
+                    audio.volume = 0
+                }else audio.volume = 0.5;
+                // set lại thanh volume
+                if(valueVolume.value != 0){
+                    valueVolume.value = 0;
+                }else valueVolume.value = 50;
+
+                app.setConfig('currentVolume', audio.volume);
+            }
+            // xử lý sự kiện thay đổi volume
+            valueVolume.oninput = function() {
+                audio.volume = valueVolume.value / 100;
+                app.setConfig('currentVolume', audio.volume);
+            }
         },
         activeCurrentSong: function() {
             var currentSongActive = $('.song.active');
@@ -309,7 +338,7 @@
                             <h3 class="title">${song.name}</h3>
                             <p class="author">${song.author}</p>
                         </div>
-                        <div class="option">
+                        <div class="option">                
                             <i class="fas fa-ellipsis-h"></i>
                         </div>
                     </div>
@@ -337,6 +366,14 @@
                 app.currentIndex = this.config['currentIndex'];
             }else {
                 app.currentIndex = 0;
+            }
+
+            if(this.config['currentVolume']) {
+                audio.volume = this.config['currentVolume'];
+                valueVolume.value = audio.volume * 100;
+            }else {
+                audio.volume = 0;
+                valueVolume.value = 0;
             }
         },
         start: function() {

@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #19cf50;
+    --primary-color: #0075ff;
     --text-color: #333;
 }
 
@@ -72,6 +72,7 @@ header h2 {
     display: flex;
     margin: auto;
     width: 200px;
+    position: relative;
 }
 
 .cd-thumb {
@@ -81,6 +82,36 @@ header h2 {
     background-color: #333;
     background-size: cover;
     margin: auto;
+}
+
+.cd-volume {
+    position: absolute;
+    bottom: -8px;
+    right: -93px;
+    color: #666;
+    font-size: 22px;
+}
+
+.cd-volume .fa-volume-mute{
+    display: none;
+}
+
+.cd-volume.not-volume .fa-volume-mute{
+    display: block;
+}
+
+.cd-volume.not-volume .fa-volume-up{
+    display: none;
+}
+
+.volume-value {
+    position: relative;
+    writing-mode: bt-lr;
+    -webkit-appearance: slider-vertical;
+    height: 100px;
+    width: 10px;
+    bottom: -61px;
+    left: 85px;
 }
 
 
