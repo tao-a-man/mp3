@@ -38,6 +38,7 @@ html {
 }
 
 .dashboard {
+    position: relative;
     padding: 16px 16px 14px;
     background-color: #fff;
     position: fixed;
@@ -69,7 +70,6 @@ header h2 {
 /* CD */
 
 .cd {
-    display: flex;
     margin: auto;
     width: 200px;
     position: relative;
@@ -86,8 +86,8 @@ header h2 {
 
 .cd-volume {
     position: absolute;
-    bottom: -8px;
-    right: -93px;
+    bottom: 5%;
+    right: -47%;
     color: #666;
     font-size: 22px;
 }
@@ -105,13 +105,12 @@ header h2 {
 }
 
 .volume-value {
-    position: relative;
     writing-mode: bt-lr;
     -webkit-appearance: slider-vertical;
-    height: 100px;
-    width: 10px;
-    bottom: -61px;
-    left: 85px;
+    position: absolute;
+    top: 30px;
+    right: -45%;
+    width: 10%;
 }
 
 
