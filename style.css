@@ -1,3 +1,4 @@
+
 :root {
     --primary-color: #0075ff;
     --text-color: #333;
@@ -247,4 +248,16 @@ header h2 {
     padding: 16px 8px;
     color: #999;
     font-size: 18px;
+}
+
+/* reponsive */
+@media (max-width: 740px) {
+    .cd-volume {
+        bottom: 3%;
+        right: -34%;
+    }
+    .volume-value {
+        top: 13%;
+        right: -33%;
+    }
 }
